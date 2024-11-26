@@ -9,22 +9,12 @@ on:
       - main
 
 jobs:
-  ci:
-    name: CI
-    runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    steps:
-      - run: exit 0
-  publish:
-    needs:
-      - ci
+  node-pkg-cd:
+    name: Node package CD
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actalog/check-ci@main
+      - uses: actions/checkout@v4
+      - uses: actalog/node-pkg-cd@v1
         with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          node-auth-token: ${{ secrets.NODE_AUTH_TOKEN }}
